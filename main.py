@@ -25,8 +25,6 @@ st.set_page_config(
 
 # セッションステートを取得
 state = st.session_state
-if "name" not in state:
-    state.name = "Streamlit"
 
 # googleスプレッドシートの認証 streamlit io　のシークレット活用
 
@@ -77,10 +75,10 @@ def Map_info(x):
 
 df_final = pd.DataFrame()
 # 公開時に使用する。
-df_final = gsheet_read()
+#df_final = gsheet_read()
 
 # ローカルテスト用
-#df_final = pd.read_csv('realestateinfo_test _ueno003.csv')
+df_final = pd.read_csv('realestateinfo_test _ueno003.csv')
 
 # 1. 画面の表示
 # サイドバー
@@ -148,12 +146,6 @@ gra_col.pyplot(fig)
 st.markdown(button_css, unsafe_allow_html=True)
 if text_col.button('検索実行'):
     state.df = df_final0
-
-# 入力欄とボタン
-new_name = text_col.text_input("Enter a new name", value=state.name)
-if text_col.button("Change"):
-    # セッションステートを更新
-    state.name = new_name
 
 st.markdown("---")
 
