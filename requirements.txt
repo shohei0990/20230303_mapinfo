@@ -6,3 +6,5 @@ gspread-dataframe==3.3.0
 pandas 
 requests
 urllib3
+matplotlib
+japanize_matplotlib
