@@ -4,9 +4,11 @@ import pandas as pd                         # CSVをデータフレームとし�
 import requests
 import urllib
 from urllib.parse import urlencode
-
-# 表示するデータを読み込み2
-df_final = pd.read_csv('realestate_info_finalimage.csv')
+import gspread
+from google.oauth2 import service_account
+from google.oauth2.service_account import Credentials
+from gspread_dataframe import get_as_dataframe
+from gspread_dataframe import set_with_dataframe
 
 # ページ設定
 st.set_page_config(
@@ -14,6 +16,34 @@ st.set_page_config(
     page_icon="🗾",
     layout="wide"
 )
+
+# googleスプレッドシートの認証 jsonファイル読み込み(key値はGCPから取得)
+scopes = ['https://www.googleapis.com/auth/spreadsheets',
+          'https://www.googleapis.com/auth/drive']
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"], scopes=scopes)
+#credentials = Credentials.from_service_account_file(SP_CREDENTIAL_FILE,scopes=scopes)
+
+gc = gspread.authorize(credentials)
+
+# googleスプレッドシートの読み込み
+SP_SHEET_KEY = st.secrets.SP_SHEET_KEY.key  # スプレッドシートのキー
+sh = gc.open_by_key(SP_SHEET_KEY)
+SP_SHEET = 'ueno003'  # sheet名
+worksheet = sh.worksheet(SP_SHEET)  # シートのデータ取得
+
+# sampleデータの取得
+pre_data = worksheet.get_all_values()
+col_name = pre_data[0][:]
+df_gs = pd.DataFrame(pre_data[1:], columns=col_name)  # 一段目をカラム、以下データフレームで取得
+
+se80 = st.write(df_gs)
+
+# -------------------------------------------------------
+
+# 表示するデータを読み込み2
+df_final = pd.read_csv('realestate_info_finalimage.csv')
+
 
 # 1. 画面の表示
 # サイドバー
