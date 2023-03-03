@@ -67,7 +67,7 @@ folium.Marker(
 
 # パラメータリスト
 # api_key = 'AGIzaSyAdFUui2C-RKcw48ApjPQJtBR_AAxIoWg4'
-api_key = st.secrets.GMAP
+api_key = st.secrets.GMAP.key
 radius = 500  # 半径500m
 keyword = "コンビニ"
 language = 'ja'
@@ -123,6 +123,3 @@ map_col2, info_col2 = st.columns([2, 1], gap="medium")
 map_col2.subheader("MAP")
 with map_col2:
     map = st_folium(m, width=1000, height=600)
-
-se90 = st.write(state.df_map)
-se91 = st.write(state.df_map.shape)
