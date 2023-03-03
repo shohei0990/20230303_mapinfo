@@ -131,7 +131,7 @@ df_final0 = df_final0[joken4]
 #joken4 = df_final0["区"].isin(se4)
 #df_final0 = df_final0[joken4]
 
-
+japanize_matplotlib.japanize()
 gra_col.subheader(f"物件ヒット数 {df_final0.shape[0]}件")
 fig = plt.figure(figsize=(10, 5))
 plt.hist(df_final0["家賃"], bins=df_final0.shape[0]//10)
