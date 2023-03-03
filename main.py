@@ -1,6 +1,6 @@
-import streamlit as st                      # streamlit
+import streamlit as st                    # streamlit
 from streamlit_folium import st_folium    # streamlitでfoliumを使う
-import pandas as pd                         # CSVをデータフレームとして読み込む
+import pandas as pd
 import requests
 import urllib
 from urllib.parse import urlencode
@@ -14,7 +14,7 @@ import japanize_matplotlib
 
 
 japanize_matplotlib.japanize()
-plt.rcParams['font.family'] = 'MS Gothic'
+#plt.rcParams['font.family'] = 'MS Gothic'
 
 # ページ設定
 st.set_page_config(
@@ -22,6 +22,11 @@ st.set_page_config(
     page_icon="🗾",
     layout="wide"
 )
+
+# セッションステートを取得
+state = st.session_state
+if "name" not in state:
+    state.name = "Streamlit"
 
 # googleスプレッドシートの認証 streamlit io　のシークレット活用
 
@@ -70,12 +75,11 @@ def Map_info(x):
         return 0, 0
 
 
-# 公開時に使用する。
 df_final = pd.DataFrame()
+# 公開時に使用する。
 df_final = gsheet_read()
-# se80   = st.write(df_gs1)
 
-# 表示するデータを読み込み : ローカルテスト用
+# ローカルテスト用
 #df_final = pd.read_csv('realestateinfo_test _ueno003.csv')
 
 # 1. 画面の表示
@@ -103,8 +107,6 @@ button_css = f"""
   }}
 </style>
 """
-st.markdown(button_css, unsafe_allow_html=True)
-action = text_col.button('検索実行')
 
 st.markdown("---")
 st.subheader('詳細検索 : ')
@@ -137,10 +139,21 @@ fig = plt.figure(figsize=(10, 5))
 plt.hist(df_final0["家賃"], bins=df_final0.shape[0]//10)
 plt.xlim([0, 50])
 plt.ylim([0, 50])
-# plt.title("物件数")
 plt.xlabel('家賃[万円]')
 plt.ylabel('物件数')
+# plt.title("物件数")
 gra_col.pyplot(fig)
+
+
+st.markdown(button_css, unsafe_allow_html=True)
+if text_col.button('検索実行'):
+    state.df = df_final0
+
+# 入力欄とボタン
+new_name = text_col.text_input("Enter a new name", value=state.name)
+if text_col.button("Change"):
+    # セッションステートを更新
+    state.name = new_name
 
 st.markdown("---")
 
