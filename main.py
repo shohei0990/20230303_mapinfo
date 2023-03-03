@@ -73,7 +73,7 @@ def Map_info(x):
         return 0, 0
 
 
-df_final = pd.DataFrame()
+#df_final = pd.DataFrame()
 # 公開時に使用する。
 #df_final = gsheet_read()
 
