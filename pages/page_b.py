@@ -53,7 +53,6 @@ folium.Marker(
 ).add_to(m)
 
 # パラメータリスト
-# api_key = 'AIzaSyAdFUui2C-RKcw48ApjPQJtBR_AAxIoWg4'
 api_key = st.secrets.GMAP.key
 radius = 500  # 半径500m
 keyword = "コンビニ"
