@@ -17,27 +17,34 @@ st.set_page_config(
     layout="wide"
 )
 
-# googleスプレッドシートの認証 jsonファイル読み込み(key値はGCPから取得)
-scopes = ['https://www.googleapis.com/auth/spreadsheets',
-          'https://www.googleapis.com/auth/drive']
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"], scopes=scopes)
-#credentials = Credentials.from_service_account_file(SP_CREDENTIAL_FILE,scopes=scopes)
 
-gc = gspread.authorize(credentials)
+def gsheet_read():
+    # googleスプレッドシートの認証 jsonファイル読み込み(key値はGCPから取得)
+    scopes = ['https://www.googleapis.com/auth/spreadsheets',
+              'https://www.googleapis.com/auth/drive']
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"], scopes=scopes)
+    #credentials = Credentials.from_service_account_file(SP_CREDENTIAL_FILE,scopes=scopes)
 
-# googleスプレッドシートの読み込み
-SP_SHEET_KEY = st.secrets.SP_SHEET_KEY.key  # スプレッドシートのキー
-sh = gc.open_by_key(SP_SHEET_KEY)
-SP_SHEET = 'ueno003'  # sheet名
-worksheet = sh.worksheet(SP_SHEET)  # シートのデータ取得
+    gc = gspread.authorize(credentials)
 
-# sampleデータの取得
-pre_data = worksheet.get_all_values()
-col_name = pre_data[0][:]
-df_gs = pd.DataFrame(pre_data[1:], columns=col_name)  # 一段目をカラム、以下データフレームで取得
+    # googleスプレッドシートの読み込み
+    SP_SHEET_KEY = st.secrets.SP_SHEET_KEY.key  # スプレッドシートのキー
+    sh = gc.open_by_key(SP_SHEET_KEY)
+    SP_SHEET = 'ueno003'  # sheet名
+    worksheet = sh.worksheet(SP_SHEET)  # シートのデータ取得
 
-se80 = st.write(df_gs)
+    # sampleデータの取得
+    pre_data = worksheet.get_all_values()
+    col_name = pre_data[0][:]
+    # 一段目をカラム、以下データフレームで取得
+    df_gs = pd.DataFrame(pre_data[1:], columns=col_name)
+
+    return(df_gs)
+
+
+df_gs1 = gsheet_read()
+se80 = st.write(df_gs1)
 
 # -------------------------------------------------------
 
