@@ -22,19 +22,6 @@ st.markdown("---")
 image_col, info_col, sele_col = st.columns([2, 3, 2], gap="medium")
 image_col.image(f"{df_map_0['画像']}", use_column_width=True)
 
-# info_col.text(f"住所　：{df_select_image['アドレス'][0]}")
-# info_col.text(f"家賃　：{df_select_image['家賃'][0]}")
-# info_col.text(f"間取り：{df_select_image['間取り'][0]}")
-# info_col.text(f"面積　：{df_select_image['面積'][0]}")
-# info_col.text(f"最寄駅：{df_select_image['最寄駅'][0]}")
-# info_col.text(f"最寄駅：{df_select_image['徒歩時間'][0]}")
-# info_col.text(f"築年数：{df_select_image['築年数'][0]}")
-# info_col.text(f"階数　：{df_select_image['階数'][0]}")
-# info_col.text(f"構造　：{df_select_image['構造'][0]}")
-# info_col.text(f"敷金　：{df_select_image['敷金'][0]}")
-# info_col.text(f"礼金　：{df_select_image['礼金'][0]}")
-# info_col.text(f"管理費：{df_select_image['管理費'][0]}")
-
 se90 = info_col.write(state.df_map)
 
 st.markdown("---")
@@ -66,7 +53,7 @@ folium.Marker(
 ).add_to(m)
 
 # パラメータリスト
-# api_key = 'AGIzaSyAdFUui2C-RKcw48ApjPQJtBR_AAxIoWg4'
+# api_key = 'AIzaSyAdFUui2C-RKcw48ApjPQJtBR_AAxIoWg4'
 api_key = st.secrets.GMAP.key
 radius = 500  # 半径500m
 keyword = "コンビニ"
@@ -118,8 +105,17 @@ for i, row in df_cb.iterrows():
         icon=folium.Icon(icon="bell", icon_color="white", color="blue")
     ).add_to(m)
 
-map_col2, info_col2 = st.columns([2, 1], gap="medium")
+info_col2, map_col2, = st.columns([1, 2], gap="medium")
 
-map_col2.subheader("MAP")
+info_col2.subheader("周辺検索")
+check1 = info_col2.checkbox("コンビニ")
+check2 = info_col2.checkbox("駅")
+check3 = info_col2.checkbox("スーパー")
+check4 = info_col2.checkbox("公園")
+check5 = info_col2.checkbox("薬局")
+check6 = info_col2.checkbox("学校")
+check7 = info_col2.checkbox("郵便局")
+
+map_col2.subheader("地図")
 with map_col2:
     map = st_folium(m, width=1000, height=600)
