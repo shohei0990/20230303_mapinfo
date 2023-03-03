@@ -46,7 +46,7 @@ def gsheet_read():
 
     # 取得数字データのstr型から数字の型変換
     select_columns_num = ['面積', '家賃', '敷金', '礼金',
-                          '管理費', '階数率', '築年数', '構造', '階数', '徒歩時間']
+                          '管理費', '築年数', '構造', '階数', '徒歩時間']
     pre0_df = df_gs[select_columns_num]
     for column in pre0_df:
         pre0_df[column] = pd.to_numeric(pre0_df[column], errors='coerce')
