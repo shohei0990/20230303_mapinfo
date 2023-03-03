@@ -44,6 +44,14 @@ def gsheet_read():
     col_name = pre_data[0][:]
     df_gs = pd.DataFrame(pre_data[1:], columns=col_name)
 
+    # 取得数字データのstr型から数字の型変換
+    select_columns_num = ['面積', '家賃', '敷金', '礼金',
+                          '管理費', '階数率', '築年数', '構造', '階数', '徒歩時間']
+    pre0_df = df_gs[select_columns_num]
+    for column in pre0_df:
+        pre0_df[column] = pd.to_numeric(pre0_df[column], errors='coerce')
+    df_gs[select_columns_num] = pre0_df
+
     return(df_gs)
 
 # 緯度・経度情報の取得
@@ -107,7 +115,6 @@ with extra_configs_1:
 #        '間取り', ['ワンルーム', '1K', '1DK', '1LDK', '2DK', '2LDK'], ['2LDK'])
 #    se4 = st.multiselect('区', ['品川', '渋谷', '江戸川', '港'], ['品川'])
 #    se5 = st.multiselect('市町', ['南品川', '東五反田', '南大井', '東品川'], ['南品川'])
-
 
 # フィルタリング
 df_final0 = df_final
