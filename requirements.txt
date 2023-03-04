@@ -8,3 +8,7 @@ requests
 urllib3
 matplotlib
 japanize_matplotlib
+numpy
+plotly.express 
+scikit-learn
+joblib
