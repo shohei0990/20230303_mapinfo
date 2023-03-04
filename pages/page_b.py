@@ -84,8 +84,7 @@ elif state.map_sele == 1:
 
         if item[0] == True:
             # パラメータリスト
-
-            #api_key = st.secrets.GMAP.key
+            api_key = st.secrets.GMAP.key
             radius = 500  # 半径500m
             keyword = column_name
             language = 'ja'
