@@ -15,6 +15,8 @@ if "df_map" not in state:
     state.df_map = pd.DataFrame()
 
 df_map_0 = state.df_map
+df_mapsele = pd.DataFrame([[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]],
+                          columns=['駅', 'バス停', 'スーパー', '公園', '薬局', 'コンビニ', '学校', '飲食店'])
 
 st.title(f"● {df_map_0['名称']}　　詳細・MAP情報")
 st.markdown("---")
@@ -52,68 +54,88 @@ folium.Marker(
     icon=folium.Icon(icon="home", icon_color="white", color="red")
 ).add_to(m)
 
-# パラメータリスト
-api_key = st.secrets.GMAP.key
-radius = 500  # 半径500m
-keyword = "コンビニ"
-language = 'ja'
-
-# エンドポイントURL
-places_endpoint = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
-# # パラメータ
-params = {
-    "key": api_key,
-    "location": f"{lat},{lng}",
-    "radius": radius,
-    "keyword": keyword,
-    "language": language,
-}
-
-# URLエンコード, リクエストURL生成
-params_encoded = urlencode(params)
-places_url = f"{places_endpoint}?{params_encoded}"
-
-# 結果取得
-r = requests.get(places_url)
-data = r.json()
-
-# APIレスポンスを取得
-places = r.json()["results"]
-df_cb = pd.DataFrame(columns=['名称', '住所', '緯度', '経度'])
-
-# 各コンビニの位置情報を表示
-for place in places:
-    temp = pd.DataFrame(data=[[place["name"], place["vicinity"], round(place["geometry"]["location"]["lat"], 7), round(
-        place["geometry"]["location"]["lng"], 7)]], columns=df_cb.columns)
-    df_cb = pd.concat([df_cb, temp])
-    print("名称:", place["name"])
-
-df_cb = df_cb.reset_index()
-
-for i, row in df_cb.iterrows():
-    # ポップアップの作成(都道府県名＋都道府県庁所在地＋人口＋面積)
-    pop = f"・名称…{row['名称']} <br>・距離[m]…"
-    folium.Marker(
-        # 緯度と経度を指定
-        location=[row['緯度'], row['経度']],
-        # ツールチップの指定(都道府県名)
-        tooltip=row['名称'],
-        # ポップアップの指定
-        popup=folium.Popup(pop, max_width=300),
-        # アイコンの指定(アイコン、色)
-        icon=folium.Icon(icon="bell", icon_color="white", color="blue")
-    ).add_to(m)
-
 info_col2, map_col2, = st.columns([1, 2], gap="medium")
 
 info_col2.subheader("周辺検索")
-check1 = info_col2.checkbox("コンビニ")
-check2 = info_col2.checkbox("駅")
-check3 = info_col2.checkbox("スーパー")
-check4 = info_col2.checkbox("公園")
-check5 = info_col2.checkbox("薬局")
-check6 = info_col2.checkbox("学校")
-check7 = info_col2.checkbox("郵便局")
+df_mapsele['駅'][0] = info_col2.checkbox("駅")
+df_mapsele['バス停'][0] = info_col2.checkbox("バス停")
+df_mapsele['スーパー'][0] = info_col2.checkbox("スーパー")
+df_mapsele['公園'][0] = info_col2.checkbox("公園")
+df_mapsele['薬局'][0] = info_col2.checkbox("薬局")
+df_mapsele['コンビニ'][0] = info_col2.checkbox("コンビニ")
+df_mapsele['学校'][0] = info_col2.checkbox("学校")
+df_mapsele['飲食店'][0] = info_col2.checkbox("飲食店")
+
+
+if info_col2.button('MAP検索'):
+    state.map_sele = 1
+
+if "map_sele" not in state:
+    state.map_sele = 0
+
+elif state.map_sele == 1:
+
+    for column_name, item in df_mapsele.iteritems():
+        print('------')
+        print(column_name)
+        print(item)
+        print(item[0])
+        print('======\n')
+
+        if item[0] == True:
+            # パラメータリスト
+
+            #api_key = st.secrets.GMAP.key
+            radius = 500  # 半径500m
+            keyword = column_name
+            language = 'ja'
+
+            # エンドポイントURL
+            places_endpoint = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+            # # パラメータ
+            params = {
+                "key": api_key,
+                "location": f"{lat},{lng}",
+                "radius": radius,
+                "keyword": keyword,
+                "language": language,
+            }
+
+            # URLエンコード, リクエストURL生成
+            params_encoded = urlencode(params)
+            places_url = f"{places_endpoint}?{params_encoded}"
+
+            # 結果取得
+            r = requests.get(places_url)
+            data = r.json()
+
+            # APIレスポンスを取得
+            places = r.json()["results"]
+            df_cb = pd.DataFrame(columns=['名称', '住所', '緯度', '経度'])
+
+            # 各コンビニの位置情報を表示
+            for place in places:
+                temp = pd.DataFrame(data=[[place["name"], place["vicinity"], round(place["geometry"]["location"]["lat"], 7), round(
+                    place["geometry"]["location"]["lng"], 7)]], columns=df_cb.columns)
+                df_cb = pd.concat([df_cb, temp])
+                print("名称:", place["name"])
+
+            df_cb = df_cb.reset_index()
+
+            for i, row in df_cb.iterrows():
+                # ポップアップの作成(都道府県名＋都道府県庁所在地＋人口＋面積)
+                pop = f"・名称…{row['名称']} <br>・距離[m]…"
+                folium.Marker(
+                    # 緯度と経度を指定
+                    location=[row['緯度'], row['経度']],
+                    # ツールチップの指定(都道府県名)
+                    tooltip=row['名称'],
+                    # ポップアップの指定
+                    popup=folium.Popup(pop, max_width=300),
+                    # アイコンの指定(アイコン、色)
+                    icon=folium.Icon(
+                        icon="bell", icon_color="white", color="blue")
+                ).add_to(m)
 
 map_col2.subheader("地図")
 with map_col2:
