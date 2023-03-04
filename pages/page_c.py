@@ -59,7 +59,7 @@ image_col.image(f"{df_map_0['画像']}", use_column_width=True)
 se90 = info_col.write(df_map_0)
 
 st.markdown("---")
-text_col5, gra_col5 = st.columns([1, 3], gap="medium")
+text_col5, gra_col5 = st.columns([1, 2], gap="medium")
 
 if text_col5.button('物件おススメ診断'):
     # 学習までのデータ準備
