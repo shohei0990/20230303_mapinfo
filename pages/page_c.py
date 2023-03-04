@@ -59,40 +59,36 @@ image_col.image(f"{df_map_0['画像']}", use_column_width=True)
 se90 = info_col.write(df_map_0)
 
 st.markdown("---")
-text_col5, gra_col5 = st.columns([1, 2], gap="medium")
-
-if text_col5.button('物件おススメ診断'):
-    # 学習までのデータ準備
-    test0 = pd_recc0  # 比較用
-    test0[select_columns5] = test0[select_columns5].fillna(-99)
-    X_test, y_test = pd.get_dummies(test0[select_columns5]), test0['家賃[万円]']
-
-    # 評価データに対する予測を行い、その結果を変数predに代入してください。
-    rf = load('rf_model-TK-slim.joblib2.cmp')
-    pred = rf.predict(X_test)
-
-    # グラフの可視化
-    fig5 = px.scatter(x=y_test, y=pred,
-                      title="  x軸：家賃[万円]　VS　　y軸：予測家賃[万円]",
-                      range_x=[0, 50],
-                      range_y=[0, 50],
-                      )
-    gra_col5.plotly_chart(fig5, use_container_width=True)
-    pred0 = pd.DataFrame(pred, columns=['pred'])
-    y_test = y_test.reset_index(drop=True)
-    pd_recc = pd.concat([df_select0, pred0], axis=1)
-    pd_recc['お得度'] = pd_recc['pred'] - pd_recc['家賃[万円]']
-
-    # ----------------------------------------------
+text_col5, gra_col5 = st.columns([1, 3], gap="medium")
 
 
-else:
-    st.write('予測・比較グラフを出すには、ボタンを押してね。')
+# 学習までのデータ準備
+test0 = pd_recc0  # 比較用
+test0[select_columns5] = test0[select_columns5].fillna(-99)
+X_test, y_test = pd.get_dummies(test0[select_columns5]), test0['家賃[万円]']
+
+# 評価データに対する予測を行い、その結果を変数predに代入してください。
+rf = load('rf_model-TK-slim.joblib2.cmp')
+pred = rf.predict(X_test)
+
+# グラフの可視化
+fig5 = px.scatter(x=y_test, y=pred,
+                  title="  x軸：家賃[万円]　VS　　y軸：予測家賃[万円]",
+                  range_x=[0, 50],
+                  range_y=[0, 50],
+                  )
+gra_col5.plotly_chart(fig5, use_container_width=True)
+pred0 = pd.DataFrame(pred, columns=['pred'])
+y_test = y_test.reset_index(drop=True)
+pd_recc = pd.concat([df_select0, pred0], axis=1)
+pd_recc['お得度'] = pd_recc['pred'] - pd_recc['家賃[万円]']
+
+# ----------------------------------------------
 
 st.markdown("---")
-
 y0 = pd_recc[pd_recc['ID'] == df_map_0['ID']]['お得度']
-y1 = round(y0[0], 1)
+y1 = round(y0.iloc[0], 1)
+print(y1)
 se90 = text_col5.subheader(f"家賃 {y1} 万円お得")
 
 pd_recc_comp = pd_recc[:df_select.shape[0]]

@@ -13,7 +13,6 @@ st.markdown("---")
 df_select = state.df
 df_select_image = df_select[:20]
 
-st.markdown("---")
 
 for i, row in df_select_image.iterrows():
     image_col, info_col, sele_col = st.columns([2, 3, 2], gap="medium")
