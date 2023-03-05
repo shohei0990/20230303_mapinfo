@@ -1,12 +1,10 @@
 import streamlit as st
-import pandas as pd
 from streamlit_folium import st_folium    # streamlitでfoliumを使う
 import folium                               # folium
 import pandas as pd                         # CSVをデータフレームとして読み込む
 import requests
 import urllib
 from urllib.parse import urlencode
-
 
 # セッションステートを取得
 state = st.session_state
@@ -18,14 +16,7 @@ df_map_0 = state.df_map
 df_mapsele = pd.DataFrame([[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]],
                           columns=['駅', 'バス停', 'スーパー', '公園', '薬局', 'コンビニ', '学校', '飲食店'])
 
-st.title(f"● {df_map_0['名称']}　　詳細・MAP情報")
-st.markdown("---")
-
-image_col, info_col, sele_col = st.columns([2, 3, 2], gap="medium")
-image_col.image(f"{df_map_0['画像']}", use_column_width=True)
-
-se90 = info_col.write(state.df_map)
-
+st.title(f"● {df_map_0['名称']}　　MAP情報")
 st.markdown("---")
 makeUrl = "https://msearch.gsi.go.jp/address-search/AddressSearch?q="
 s_quote = urllib.parse.quote(df_map_0['アドレス'])
@@ -54,9 +45,9 @@ folium.Marker(
     icon=folium.Icon(icon="home", icon_color="white", color="red")
 ).add_to(m)
 
-info_col2, map_col2, = st.columns([1, 2], gap="medium")
+info_col2, map_col2, = st.columns([1, 3], gap="medium")
 
-info_col2.subheader("周辺検索")
+info_col2.subheader("周辺検索:")
 df_mapsele['駅'][0] = info_col2.checkbox("駅")
 df_mapsele['バス停'][0] = info_col2.checkbox("バス停")
 df_mapsele['スーパー'][0] = info_col2.checkbox("スーパー")
@@ -136,6 +127,16 @@ elif state.map_sele == 1:
                         icon="bell", icon_color="white", color="blue")
                 ).add_to(m)
 
-map_col2.subheader("地図")
+map_col2.subheader("地図:")
 with map_col2:
     map = st_folium(m, width=1000, height=600)
+
+
+st.markdown("---")
+
+image_col, info_col, sele_col = st.columns([2, 3, 2], gap="medium")
+image_col.image(f"{df_map_0['画像']}", use_column_width=True)
+
+df_0 = pd.DataFrame(state.df_map2)
+info_col.subheader(f"● {df_0.columns[0]}")
+info_col.dataframe(state.df_map2, width=500, height=458)
