@@ -84,7 +84,7 @@ for i, row in df_select_image.iterrows():
 
     sele_col.subheader("●周辺施設")
     if sele_col.button(f"MAP確認.{i}"):
-        state.df_map  = row
+        state.df_map = row
         state.df_map2 = df_table[f"{row['名称']}"]
         se50 = sele_col.write('➡➡➡   P2 地図確認のページに進んでください！')
 
