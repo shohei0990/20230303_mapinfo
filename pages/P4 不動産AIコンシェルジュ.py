@@ -8,7 +8,6 @@ st.title('不動産AIコンシェルジュ')
 st.write('AIコンシェルジュです。不動産についてなんでも聞いてください。連続しての質問も可能です。',)
 
 OA_API_KEY = st.secrets.SERVER.openai
-st.secrets.GMAP.key
 openai.api_key = OA_API_KEY
 
 question = st.text_input("こちらに記入してください。")
