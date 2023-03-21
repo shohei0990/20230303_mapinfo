@@ -12,3 +12,4 @@ numpy
 plotly.express 
 scikit-learn
 joblib
+openai
